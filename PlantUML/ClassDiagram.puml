@@ -1,0 +1,90 @@
+@startuml Class Diagram Car Reservation System
+left to right direction
+package "CarReservationSystem"{
+    class "<<Application>>\nCarReservationService" as CarReservationService{
+    }
+
+    class "<<Resource>>\nCars" as ResourceCars{
+        <<GET>> +getCars():Car
+        <<POST>> -addCar():Car
+    }
+
+    class "<<Resource>>\nCar" as ResourceCar{
+        <<GET>> +getCar():Car
+        <<PUT>> -updateCar():Car
+        <<DELETE>> -deleteCar():Car
+    }
+    
+    class "<<Representation>>\nCar" as RepresentationCar {
+        -brand
+        -seat
+        -gearType
+        -price
+        -pickupaddress
+    }
+
+    class "<<Resource>>\nAuth" as ResourceAuth{
+    }
+
+    class "<<Resource>>\nLogin" as ResourceLogin{
+        <<POST>> +login():User
+    }
+
+    class "<<Resource>>\nRegister" as ResourceRegister{
+        <<POST>> +register():User
+    }
+
+    class "<<Resource>>\nMe" as ResourceMe{
+        <<GET>> -getMe():User
+    }
+
+    class "<<Resource>>\nLogout" as ResourceLogout{
+        <<GET>> -logout():Void
+    }
+
+    class "<<Representation>>\nUser" as RepresentationUser{
+        -name
+        -email
+        -telephoneNumber
+        -role
+        -password
+    }
+
+    class "<<Resource>>\nReservations" as ResourceReservations{
+        <<GET>> +getReservations():Reservation
+        <<POST>> -addReservation():Reservation
+    }
+
+    class "<<Resource>>\nReservation" as ResourceReservation{
+        <<GET>> +getReservation():Reservation
+        <<PUT>> -updateReservation():Reservation
+        <<DELETE>> -cancelReservation():void
+    }
+
+    class "<<Representation>>\nReservation" as RepresentationReservation{
+        -pickupdate
+        -returndate
+        -user
+        -car
+        -createdAt
+    }
+}
+
+CarReservationService ..> ResourceCars:"/cars\n<<Path>>"
+ResourceCars ..> ResourceCar:"/{carId}\n<<Path>>"
+ResourceCar ..> RepresentationCar: "<<use>>"
+ResourceCar ..> ResourceReservations: "/reservations\n<<Path>>"
+
+CarReservationService ..> ResourceAuth:"/auth\n<<Path>>"
+ResourceAuth ..> ResourceLogin:"/login\n<<Path>>"
+ResourceAuth ..> ResourceRegister:"/register\n<<Path>>"
+ResourceAuth ..> ResourceMe:"/me\n<<Path>>"
+ResourceAuth ..> ResourceLogout:"/logout\n<<Path>>"
+ResourceLogin ..> RepresentationUser: "<<use>>"
+ResourceRegister ..> RepresentationUser: "<<use>>"
+ResourceMe ..> RepresentationUser: "<<use>>"
+
+CarReservationService ..> ResourceReservations:"/reservations\n<<Path>>"
+ResourceReservations ..> ResourceReservation:"/{reservationId}\n<<Path>>"
+ResourceReservation ..> RepresentationReservation: "<<use>>"
+@enduml

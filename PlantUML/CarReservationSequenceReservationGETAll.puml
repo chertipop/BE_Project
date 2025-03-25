@@ -1,0 +1,39 @@
+@startuml Manage Reservation (GET)
+
+header Sample Car Reservation Sequence Diagram
+footer Page %page% of %lastpage%
+title "Get All Reservations (GET)"
+
+participant "Client" as client
+participant "<<javaScript>>\n:server" as server
+participant "<<router>>\n:reservations" as routerReservation
+participant "<<middleware>>\n:auth" as authMiddleware
+participant "<<controllers>>\n:reservations" as controllersReservations
+participant "<<model>>\n:Reservation" as modelReservation
+database "<<MongoDB>>\n:reservations" as ReservationsDatabase
+
+client->server ++:req.get('/reservations')
+server->routerReservation ++:app.use('/reservations',reservations)
+routerReservation -> authMiddleware ++: protect()
+routerReservation <- authMiddleware --: next()
+routerReservation -> controllersReservations ++:getReservations
+alt admin and route is '/reservations'
+        controllersReservations -> modelReservation ++:find()
+        modelReservation -> ReservationsDatabase ++: ReservationSchema
+        ReservationsDatabase --> modelReservation --: reservation
+        controllersReservations <-- modelReservation --: reservation
+else admin and route is '/companies/companyID/reservations'
+        controllersReservations -> modelReservation ++:find(req.params.companyID)
+        modelReservation -> ReservationsDatabase ++: ReservationSchema
+        ReservationsDatabase --> modelReservation --: reservation
+        controllersReservations <-- modelReservation --: reservation
+else user
+    controllersReservations -> modelReservation ++:find(req.user.id)
+    modelReservation -> ReservationsDatabase ++: ReservationSchema
+    ReservationsDatabase --> modelReservation --: reservation
+    controllersReservations <-- modelReservation --: reservation
+end
+controllersReservations->client --:response
+
+
+@enduml

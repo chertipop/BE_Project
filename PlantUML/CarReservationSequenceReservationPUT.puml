@@ -1,0 +1,28 @@
+@startuml Manage Reservation (PUT)
+
+header Sample Car Reservation Sequence Diagram
+footer Page %page% of %lastpage%
+title "Update Reservation (PUT)"
+
+participant "Client" as client
+participant "<<javaScript>>\n:server" as server
+participant "<<router>>\n:reservations" as routerReservations
+participant "<<middleware>>\n:auth" as authMiddleware
+participant "<<controllers>>\n:reservations" as controllersReservations
+participant "<<model>>\n:Reservation" as modelReservation
+database "<<MongoDB>>\n:reservations" as ReservationsDatabase
+
+client->server ++:req.put('/reservations/:id')
+server->routerReservations ++:app.use('/reservations',reservations)
+routerReservations -> authMiddleware ++: protect()
+routerReservations <- authMiddleware --: next()
+routerReservations -> authMiddleware ++: authorize("admin","user")
+routerReservations <- authMiddleware --: next()
+routerReservations -> controllersReservations ++:updateReservation
+controllersReservations -> modelReservation ++:findByIdAndUpdate(req.params.id, req.body)
+modelReservation -> ReservationsDatabase ++: ReservationSchema
+ReservationsDatabase --> modelReservation --: reservation
+controllersReservations <-- modelReservation --: reservation
+controllersReservations->client --:response
+
+@enduml

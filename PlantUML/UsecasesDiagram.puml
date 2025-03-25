@@ -1,0 +1,46 @@
+@startuml Use Case Diagram Car Reservation System
+left to right direction
+
+actor User
+actor Admin
+rectangle "Car Reservation System" as CarReservationSystem{
+    usecase "Login" as UC_Login
+    usecase "Register" as UC_Register
+    usecase "View Cars" as UC_ViewCars
+    usecase "Make Reservation" as UC_MakeReservation
+    usecase "Cancel Reservation" as UC_CancelReservation
+    usecase "View Reservations" as UC_ViewReservations
+    usecase "Logout" as UC_Logout
+    usecase "View Cars" as UC_ViewCars_Admin
+    usecase "View Reservations" as UC_ViewReservations_Admin
+    usecase "Add Car" as UC_AddCar
+    usecase "Update Car" as UC_UpdateCar
+    usecase "Delete Car" as UC_DeleteCar
+}
+
+
+User -- UC_Login
+User -- UC_Register
+User -- UC_ViewCars
+User -- UC_MakeReservation
+User -- UC_CancelReservation
+User -- UC_ViewReservations
+
+Admin -- UC_Login
+Admin -- UC_Register
+Admin -- UC_ViewCars
+Admin -- UC_ViewReservations
+Admin -- UC_AddCar
+Admin -- UC_UpdateCar
+Admin -- UC_DeleteCar
+Admin -- UC_MakeReservation
+Admin -- UC_CancelReservation
+
+UC_MakeReservation -- UC_ViewCars
+UC_CancelReservation -- UC_ViewReservations
+UC_ViewReservations -- UC_ViewReservations_Admin
+UC_ViewCars -- UC_ViewCars_Admin
+
+UC_Logout ..|> UC_Login : <<extends>>
+
+@enduml

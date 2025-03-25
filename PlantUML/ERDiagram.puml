@@ -1,0 +1,34 @@
+@startuml ER Diagram Car Reservation
+
+entity "Car" as car {
+    *car_id: number <<generated>>
+    *brand: text
+    *seat: number
+    *gearType: enum
+    *price: number
+    *pickupaddress: text
+}
+
+entity "User" as user {
+    *user_id: number <<generated>>
+    *name: text
+    *telephoneNumber: text
+    *email: text
+    *role: enum
+    *password: text
+    *createdAt: date <<generated>>
+}
+
+entity "Reservation" as reservation {
+    *reservation_id: number <<generated>>
+    *pickupdate: date
+    *returndate: date
+    *user_id: number <<FK>>
+    *car_id: number <<FK>>
+    *createdAt: date <<generated>>
+}
+
+car ||--o{ reservation
+reservation }o--|| user
+
+@enduml

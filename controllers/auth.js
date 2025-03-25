@@ -17,6 +17,8 @@ const sendTokenResponse = (user,statusCode,res)=>{
 }
 
 exports.register = async (req,res,next) => {
+        
+        console.log(req.body)
         try {
                const{name, telephoneNumber, email, password, role} = req.body;
 

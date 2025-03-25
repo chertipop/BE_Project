@@ -2,6 +2,7 @@ const express = require("express");
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const connectDB = require("./config/db");
+const cors = require('cors');
 
 dotenv.config({ path: "./config/config.env" });
 
@@ -10,6 +11,7 @@ connectDB();
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors());
 
 const cars = require("./routes/cars");
 const reservations = require("./routes/reservations");
